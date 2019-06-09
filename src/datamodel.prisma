@@ -1,0 +1,239 @@
+# zJED: Prisma Datamodel Field Name Conventions:
+# standard fields are camelCased
+# fields that have something unusal about them are described camelCased for the standard part then snake_cased for the unusual part
+# for example, for string fields in which case insentive searches are desired:
+#   camelCased base field name if the string field can contain a mix of upper and lower case
+#   camelCased base field name appended with _lcase if the database contains an associated case sensitive field but an case insensitive search ability is desired
+
+type User {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  name: String!
+  name_lcase: String!
+  email: String! @unique
+  email_lcase: String! @unique
+  emailValidated: Boolean! @default(value: false)
+  active: Boolean! @default(value: true)
+  posts: [Post!]! @relation(name: "OwnerUserToPost", onDelete: SET_NULL)
+  comments: [Comment!]! @relation(name: "OwnerUserToComments", onDelete: SET_NULL)
+  artistRecords: [Artist!]! @relation(name: "OwnerUserToArtist", onDelete: SET_NULL)
+  artworkRecords: [Artwork!]! @relation(name: "OwnerUserToArtwork", onDelete: SET_NULL)
+  artworkLocationRecords: [ArtworkLocation!]!
+    @relation(name: "OwnerUserToArtworkLocation", onDelete: SET_NULL)
+  auctionArtworkSeller: [AuctionArtwork!]! @relation(name: "AuctionToSeller", onDelete: SET_NULL)
+  auctionArtworkBuyer: [AuctionArtwork!]! @relation(name: "AuctionToBuyer", onDelete: SET_NULL)
+  auctionArtworkWatcher: [AuctionArtwork!]! @relation(name: "AuctionToWatcher", onDelete: SET_NULL)
+  auctionArtworkBid: [AuctionArtworkBid!]! @relation(name: "BidToUser", onDelete: SET_NULL)
+  password: String!
+  resetToken: String
+  resetTokenExpiry: String
+  permissions: [PermissionsType!]! @scalarList(strategy: RELATION)
+  # createdBy: User! @relation(name: "CreatedByUserToUser")
+  # updatedBy: User! @relation(name: "UpdatedByUserToUser")
+  # deletedBy: User @relation(name: "DeletedByUserToUser")
+  # postsCreated: [Post!]! @relation(name: "CreatedByUserToPost")
+  # postsUpdated: [Post!]! @relation(name: "UpdatedByUserToPost")
+  # postsDeleted: [Post!]! @relation(name: "DeletedByUserToPost")
+  # commentsCreated: [Comment!]! @relation(name: "CreatedByUserToComment")
+  # commentsUpdated: [Comment!]! @relation(name: "UpdatedByUserToComment")
+  # commentsDeleted: [Comment!]! @relation(name: "DeletedByUserToComment")
+}
+type Post {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  owner: User! @relation(name: "OwnerUserToPost", onDelete: SET_NULL)
+  title: String!
+  title_lcase: String!
+  body: String!
+  body_lcase: String!
+  isPublished: Boolean! @default(value: false)
+  comments: [Comment!]! @relation(name: "PostToComments", onDelete: SET_NULL)
+  # createdBy: User! @relation(name: "CreatedByUserToPost")
+  # updatedBy: User! @relation(name: "UpdatedByUserToPost")
+  # deletedBy: User @relation(name: "DeletedByUserToPost")
+}
+type Comment {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  owner: User! @relation(name: "OwnerUserToComments", onDelete: SET_NULL)
+  post: Post! @relation(name: "PostToComments", onDelete: SET_NULL)
+  text: String!
+  text_lcase: String!
+  isPublished: Boolean! @default(value: false)
+  # createdBy: User! @relation(name: "CreatedByUserToComment")
+  # updatedBy: User! @relation(name: "UpdatedByUserToComment")
+  # deletedBy: User @relation(name: "DeletedByUserToComment")
+}
+type Artist {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  owner: User! @relation(name: "OwnerUserToArtist", onDelete: SET_NULL)
+  isPublished: Boolean! @default(value: false)
+  wikiPage: String
+  wikiPhoto: String
+  imageLink: String
+  birthName: String
+  commonName: String
+  dateOfBirth: String
+  dateOfBirthAccuracy: String
+  dateOfDeath: String
+  dateOfDeathAccuracy: String
+  nationality: String
+  knownFor: String
+  movements: String
+  gender: String
+  artworks: [Artwork!]! @relation(name: "ArtworkToArtist", onDelete: SET_NULL)
+  artworkLocations: [ArtworkLocation!]!
+    @relation(name: "ArtworkLocationToArtist", onDelete: SET_NULL)
+  deceased: Boolean!
+  birthCountry: String
+  birthLocation: String
+  birthLocationDetails: String
+  deathCountry: String
+  deathLocation: String
+  deathLocationDetails: String
+  imageMaxName: String
+  imageMaxWidth: Int
+  imageMaxHeight: Int
+  imageOptName: String
+  imageOptWidth: Int
+  imageOptHeight: Int
+  imageThmName: String
+  imageThmWidth: Int
+  imageThmHeight: Int
+}
+type ArtworkLocation {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  owner: User! @relation(name: "OwnerUserToArtworkLocation", onDelete: SET_NULL)
+  isPublished: Boolean! @default(value: false)
+  wikiPage: String
+  wikiPhoto: String
+  imageLink: String
+  name: String!
+  nickname: String
+  description: String
+  dateFirstOpened: String
+  streetAddress: String
+  city: String
+  state: String
+  postalCode: String
+  country: String
+  coorE: Int
+  coorN: Int
+  website: String
+  isMuseum: Boolean! @default(value: false)
+  imageMaxName: String
+  imageMaxWidth: Int
+  imageMaxHeight: Int
+  imageOptName: String
+  imageOptWidth: Int
+  imageOptHeight: Int
+  imageThmName: String
+  imageThmWidth: Int
+  imageThmHeight: Int
+  artworks: [Artwork!]! @relation(name: "ArtworkLocationToArtwork", onDelete: SET_NULL)
+  artists: [Artist!]! @relation(name: "ArtworkLocationToArtist", onDelete: SET_NULL)
+}
+type Artwork {
+  id: ID! @id
+  easyId: String! @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  owner: User! @relation(name: "OwnerUserToArtwork", onDelete: SET_NULL)
+  isPublished: Boolean! @default(value: false)
+  wikiPage: String
+  wikiPhoto: String
+  imageLink: String
+  artist: Artist! @relation(name: "ArtworkToArtist", onDelete: SET_NULL)
+  notableWork: Boolean! @default(value: false)
+  artworkLocation: ArtworkLocation! @relation(name: "ArtworkLocationToArtwork", onDelete: SET_NULL)
+  artworkLocationURL: String
+  fileName: String
+  workName: String
+  workName_english: String
+  workName_ascii: String
+  dateCompleted: String
+  dateCompletedAccuracy: String
+  type: String
+  genre: String
+  medium: String
+  mediumSupport: String
+  description: String
+  descriptionSource: String
+  accession: String
+  creditLine: String
+  dimensionCoreW_mm: Int
+  dimensionCoreH_mm: Int
+  dimensionCoreD_mm: Int
+  dimensionCoreWHD_in: String
+  dimensionFramedW_mm: Int
+  dimensionFramedH_mm: Int
+  dimensionFramedD_mm: Int
+  dimensionFramedWHD_in: String
+  signature: String
+  onviewAt: String
+  otherDescription: String
+  imageMaxName: String
+  imageMaxWidth: Int
+  imageMaxHeight: Int
+  imageOptName: String
+  imageOptWidth: Int
+  imageOptHeight: Int
+  imageThmName: String
+  imageThmWidth: Int
+  imageThmHeight: Int
+  auctions: [AuctionArtwork!]! @relation(name: "AuctionToArtwork", onDelete: SET_NULL)
+}
+type AuctionArtwork {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  isPublished: Boolean! @default(value: false)
+  startDate: DateTime
+  endDate: DateTime
+  withdrawnDate: DateTime
+  saleDate: DateTime
+  refundDate: DateTime
+  reserve: Int
+  initialPrice: Int
+  buyoutPrice: Int
+  salePrice: Int
+  artwork: Artwork! @relation(name: "AuctionToArtwork", onDelete: SET_NULL)
+  seller: User! @relation(name: "AuctionToSeller", onDelete: SET_NULL)
+  buyer: User @relation(name: "AuctionToBuyer", onDelete: SET_NULL)
+  bids: [AuctionArtworkBid!]! @relation(name: "BidToAuction", onDelete: SET_NULL)
+  watchers: [User!]! @relation(name: "AuctionToWatcher", onDelete: SET_NULL)
+}
+type AuctionArtworkBid {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
+  auction: AuctionArtwork! @relation(name: "BidToAuction", onDelete: SET_NULL)
+  bidder: User @relation(name: "BidToUser", onDelete: SET_NULL)
+  amount: Int
+}
+
+enum PermissionsType {
+  USER
+  ADMIN
+  USER_PERMISSIONS_UPDATE
+}

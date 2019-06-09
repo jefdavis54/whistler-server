@@ -1,0 +1,7 @@
+ADMIN_EMAIL_LCASE=admin@gmail.com
+PRISMA_SERVICE=default@default
+PRISMA_ENDPOINT=https://someapp.herokuapp.com
+PRISMA_SECRET=someprismasecret
+SERVER_SECRET=someserversecret
+STRIPE_SECRET=somestripsecret
+PORT=5432
