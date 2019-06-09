@@ -12,14 +12,14 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "heroku-postbuild": "tsc --outDir dist && gulp",
+    "heroku-postbuild": "tsc && gulp",
     "dev": "env-cmd -f ./.env.development ts-node-dev --no-notify --respawn --transpileOnly ./src",
     "devtoken": "env-cmd -f ./.env.development ts-node-dev --no-notify --respawn --transpileOnly ./src/util/logToken.ts",
     "devdata": "env-cmd -f ./.env.development ts-node-dev --no-notify --respawn --transpileOnly ./src/util/sampledata",
     "prodtoken": "env-cmd -f ./.env.production ts-node-dev --no-notify --respawn --transpileOnly ./src/util/logToken.ts",
     "proddata": "env-cmd -f ./.env.production ts-node-dev --no-notify --respawn --transpileOnly ./src/util/sampledata",
     "test": "jest",
-    "deploy": "prisma deploy --env-file ../../config/dev.env"
+    "deploy": "prisma deploy --env-file ./.env.development"
   },
   "dependencies": {
     "apollo-server": "^2.5.0",
