@@ -1,8 +1,8 @@
-# Whistler
+## Whistler
 
 server
 
-Based on two excellent GraphQL courses:
+### Based on two excellent GraphQL courses:
 
 - Andrew Mead's [The Modern GraphQL Bootcamp (with Node.js and Apollo)](https://www.udemy.com/graphql-bootcamp/)
 - Wes Bos' [Fullstack Advanced React & GraphQL](https://advancedreact.com/)

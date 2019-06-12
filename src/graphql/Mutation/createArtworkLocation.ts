@@ -1,6 +1,9 @@
 import { Context, ArtworkLocation } from "../../lib/typsescriptInterfaces";
 import prismaResponse from "../../util/responseShaperPRISMA";
 import { errObj } from "../../util/responseShaperSERVER";
+import getAuthUserIdWithPermission from "../../util/prismaGetAuthUserIdWithPermission";
+import { PERMISSIONS_OBJ } from "../../lib/constants";
+import { ERR_01_NOT_AUTHORIZED } from "../../lib/errorMessages";
 
 interface Props {
   data: ArtworkLocation;
@@ -9,8 +12,12 @@ interface Props {
 const createArtworkLocation = async (
   parent: any,
   { data: dataToChk }: Props,
-  { prisma }: Context,
+  { prisma, request }: Context,
 ) => {
+  const userId = await getAuthUserIdWithPermission(prisma, request, [PERMISSIONS_OBJ.USER]);
+  if (userId.errors.length > 0) {
+    return errObj(ERR_01_NOT_AUTHORIZED);
+  }
   if (dataToChk.easyId) {
     const whereObj = { where: { easyId: dataToChk.easyId.toLowerCase() } };
     const prismaResponseObj = await prismaResponse(prisma.artworkLocations, [whereObj]);
@@ -23,9 +30,9 @@ const createArtworkLocation = async (
   } else {
     return errObj("EasyId is missing.");
   }
-  // zJED TODO Owner should come from request context. Right now I just default it to admin
+  // zJED TODO data validation of dataToChk
   const data = { ...dataToChk };
-  data.owner = { connect: { email_lcase: process.env.ADMIN_EMAIL_LCASE } };
+  data.owner = { connect: { id: userId.data } };
   return prismaResponse(prisma.createArtworkLocation, [data]);
 };
 

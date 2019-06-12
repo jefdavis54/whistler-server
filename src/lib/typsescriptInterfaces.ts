@@ -14,7 +14,7 @@ type PrismaCtx = Prisma;
 interface PrismaResponse {
   errors: string[];
   data: {
-    deletedAt: string | null;
+    deletedAt?: string;
   };
 }
 
@@ -237,6 +237,25 @@ interface AuctionArtworkBid {
   [key: string]: any;
 }
 
+interface DataLoginUser {
+  data: LoginUserInput;
+}
+
+interface LoginUserInput {
+  email: string;
+  password: string;
+}
+
+interface DataCreateUser {
+  data: CreateUserInput;
+}
+
+interface CreateUserInput {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export {
   Context,
   PrismaCtx,
@@ -249,5 +268,7 @@ export {
   Artwork,
   ArtworkLocation,
   AuctionArtwork,
-  AuctionArtworkBid
+  AuctionArtworkBid,
+  DataLoginUser,
+  DataCreateUser,
 };

@@ -12,6 +12,7 @@ const typeDefs = gql`
     createUser(data: CreateUserInput!): MeResponse!
     createArtworkLocation(data: CreateArtworkLocationInput!): ArtworkLocationResponse!
     getWikiLocation(url: String!): WikiLocation!
+    loginUser(data: LoginUserInput!): MeResponse!
   }
   type User {
     id: String!
@@ -301,6 +302,10 @@ const typeDefs = gql`
   type SimpleWikiLocation {
     easyId: String!
     wikiPage: String!
+  }
+  input LoginUserInput {
+    email: String!
+    password: String!
   }
   enum PermissionsType {
     USER
