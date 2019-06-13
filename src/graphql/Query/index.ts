@@ -1,6 +1,7 @@
-import users from './users'
-import artworks from './artworks'
-import artists from './artists'
-import artworkLocations from './artworkLocations'
+import users from "./users";
+import artworks from "./artworks";
+import artists from "./artists";
+import artworkLocations from "./artworkLocations";
+import me from "./me";
 
-export default { users, artworks, artworkLocations, artists }
+export default { users, artworks, artworkLocations, artists, me };

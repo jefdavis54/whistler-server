@@ -7,6 +7,7 @@ const typeDefs = gql`
     artists: ArtistsResponse!
     artworks: ArtworksResponse!
     artworkLocations: ArtworkLocationsResponse!
+    me: MeResponse!
   }
   type Mutation {
     createUser(data: CreateUserInput!): MeResponse!
@@ -39,6 +40,10 @@ const typeDefs = gql`
     resetToken: String
     resetTokenExpiry: String
     permissions: [PermissionsType!]!
+  }
+  type Me {
+    name: String!
+    email: String!
   }
   type Post {
     id: String!
@@ -259,7 +264,7 @@ const typeDefs = gql`
   }
   type MeResponse {
     errors: [String!]!
-    data: User
+    data: Me
     token: String
   }
   type UsersResponse {

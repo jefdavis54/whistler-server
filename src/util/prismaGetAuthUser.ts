@@ -57,7 +57,7 @@ async function getAuthUser(prisma: PrismaCtx, requestObj: any) {
     if (!user.data.active) {
       return errObj(ERR_01_NOT_AUTHORIZED);
     }
-    if (typeof user.data.deletedAt !== "undefined" && user.data.deletedAt !== null) {
+    if (user.data.deletedAt) {
       // zJED PROD TODO: Switch to return errObj(ERR_01_NOT_AUTHORIZED)
       return errObj("ERRROR:SERVER:prismaGetAuthUser:: User marked as deleted.");
     }
