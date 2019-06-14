@@ -1,11 +1,12 @@
 import { Context, DataCreateUser, User } from "../../lib/typsescriptInterfaces";
 import prismaResponse from "../../util/responseShaperPRISMA";
-import { errObj, dataObj } from "../../util/responseShaperSERVER";
+import { errRobj, dataObjRobj } from "../../util/responseShaperSERVER";
 import isEmailTaken from "../../util/prismaIsEmailTaken";
 import generateTokenForUser from "../../util/generateTokenForUser";
 import generatePasswordHash from "../../util/generatePasswordHash";
 import { PERMISSIONS_OBJ } from "../../lib/constants";
 
+// zJED TODO: It would be nice to attempt to login with the new user credentials
 const createUser = async (
   parent: any,
   { data: dataToChk }: DataCreateUser,
@@ -33,9 +34,15 @@ const createUser = async (
   const emailTakenObj = await isEmailTaken(prisma, dataToChk.email);
   if (emailTakenObj.errors.length > 0) {
     errors.push(...emailTakenObj.errors);
+  } else if (emailTakenObj.data) {
+    if (emailTakenObj.data.taken) {
+      errors.push("Email taken");
+    } else {
+      data.email = email;
+      data.email_lcase = email.toLowerCase();
+    }
   } else {
-    data.email = email;
-    data.email_lcase = email.toLowerCase();
+    errors.push("Unexpected response attempting to check if email already exists");
   }
   // Do not trim or modify dataToChk.password. The generatePasswordHash function is responsible for handling that if needed.
   const hashedPasswordObj = await generatePasswordHash(dataToChk.password);
@@ -45,7 +52,7 @@ const createUser = async (
     errors.push(...hashedPasswordObj.errors);
   }
   if (errors.length > 0) {
-    return errObj(errors);
+    return errRobj(errors);
   }
   const { USER } = PERMISSIONS_OBJ;
   // emailValidated: false,
@@ -62,12 +69,15 @@ const createUser = async (
     delete user.data.password;
     const { id } = user.data;
     if (typeof id !== "string") {
-      return errObj("Create user failed.");
+      return errRobj("Create user failed.");
     }
-    const token = generateTokenForUser(user.data);
-    return dataObj([], user.data, token);
+    const tokenRobj = generateTokenForUser(user.data);
+    if (tokenRobj.errors.length > 0) {
+      return errRobj(tokenRobj.errors);
+    }
+    return dataObjRobj([], user.data, tokenRobj.data);
   }
-  return errObj(user.errors);
+  return errRobj(user.errors);
 };
 
 export default createUser;

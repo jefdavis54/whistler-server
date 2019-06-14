@@ -1,7 +1,7 @@
 import prismaResponse from "../../util/responseShaperPRISMA";
 import { Context, User } from "../../lib/typsescriptInterfaces";
 import { PERMISSIONS_OBJ, PRISMA_ID_LENGTH } from "../../lib/constants";
-import { errObj } from "../../util/responseShaperSERVER";
+import { errRobj } from "../../util/responseShaperSERVER";
 import getAuthUserIdWithPermission from "../../util/prismaGetAuthUserIdWithPermission";
 
 interface Where {
@@ -11,7 +11,7 @@ interface Where {
 const users = async (parent: any, { withName = "" }, { prisma, request }: Context) => {
   const checkId = await getAuthUserIdWithPermission(prisma, request, [PERMISSIONS_OBJ.ADMIN]);
   if (checkId.errors.length > 0) {
-    return errObj(checkId.errors);
+    return errRobj(checkId.errors);
   }
   if (
     checkId.data &&
@@ -24,6 +24,7 @@ const users = async (parent: any, { withName = "" }, { prisma, request }: Contex
       where = { name_lcase_contains: withName_lcase.toLowerCase() };
     }
     const response = await prismaResponse(prisma.users, [where]);
+    // zJED TODO: Does graphql securely remove fields not included in types? Password in Prisma User is not included in Server User. Do I need this removal of password?
     if (Array.isArray(response.data) && response.data.length > 0) {
       response.data = response.data.map((user: User) => {
         if (user.password) {
@@ -35,7 +36,7 @@ const users = async (parent: any, { withName = "" }, { prisma, request }: Contex
     console.log(response);
     return response;
   }
-  return errObj("ERROR:SERVER:Query:users:: Unknown error attempting to retrieve users.");
+  return errRobj("ERROR:SERVER:Query:users:: Unknown error attempting to retrieve users.");
 };
 
 export default users;

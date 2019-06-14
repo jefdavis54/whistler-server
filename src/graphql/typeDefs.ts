@@ -14,6 +14,8 @@ const typeDefs = gql`
     createArtworkLocation(data: CreateArtworkLocationInput!): ArtworkLocationResponse!
     getWikiLocation(url: String!): WikiLocation!
     loginUser(data: LoginUserInput!): MeResponse!
+    requestPasswordReset(email: String!): StringResponse!
+    resetPassword(data: ResetPasswordInput!): MeResponse!
   }
   type User {
     id: String!
@@ -41,7 +43,26 @@ const typeDefs = gql`
     resetTokenExpiry: String
     permissions: [PermissionsType!]!
   }
-  type Me {
+  type UserOutput {
+    id: String!
+    easyId: String!
+    name: String!
+    email: String!
+    emailValidated: Boolean!
+    active: Boolean!
+    posts: [Post!]!
+    comments: [Comment!]!
+    artistRecords: [Artist!]!
+    artworkRecords: [Artwork!]!
+    artworkLocationRecords: [ArtworkLocation!]!
+    auctionArtworkSeller: [AuctionArtwork!]!
+    auctionArtworkBuyer: [AuctionArtwork!]!
+    auctionArtworkWatcher: [AuctionArtwork!]!
+    auctionArtworkBid: [AuctionArtworkBid!]!
+    permissions: [PermissionsType!]!
+  }
+  type MeOutput {
+    easyId: String!
     name: String!
     email: String!
   }
@@ -264,12 +285,12 @@ const typeDefs = gql`
   }
   type MeResponse {
     errors: [String!]!
-    data: Me
+    data: MeOutput
     token: String
   }
   type UsersResponse {
     errors: [String!]!
-    data: [User!]
+    data: [UserOutput!]
   }
   type ArtistsResponse {
     errors: [String!]!
@@ -281,7 +302,11 @@ const typeDefs = gql`
   }
   type UserResponse {
     errors: [String!]!
-    data: User
+    data: UserOutput
+  }
+  type StringResponse {
+    errors: [String!]!
+    data: String
   }
   type ArtistResponse {
     errors: [String!]!
@@ -298,6 +323,11 @@ const typeDefs = gql`
   type ArtworkLocationResponse {
     errors: [String!]!
     data: ArtworkLocation
+  }
+  input ResetPasswordInput {
+    email: String!
+    password: String!
+    resetToken: String!
   }
   # zJED TODO: Remove type WikiLocation
   type WikiLocation {

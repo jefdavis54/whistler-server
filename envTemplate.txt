@@ -4,4 +4,7 @@ PRISMA_ENDPOINT=https://someapp.herokuapp.com
 PRISMA_SECRET=someprismasecret
 SERVER_SECRET=someserversecret
 STRIPE_SECRET=somestripsecret
+SMTP_HOST=smtp.someserver.com
+SMTP_USERNAME=admin
+SMTP_PASSWORD=password
 PORT=5432

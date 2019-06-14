@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { errObj, dataStr } from "./responseShaperSERVER";
+import { errRobj, dataStrRobj } from "./responseShaperSERVER";
 
 // zJED TODO: Add a server 'pepper' to password before hashing. Mostly because bcrypt has a weird max length limitation and a pepper would consistently get around that.
 
@@ -27,13 +27,13 @@ const generatePasswordHash = (password: string) => {
     }
   }
   if (errors.length > 0) {
-    return errObj(errors);
+    return errRobj(errors);
   }
   if (Array.isArray(regexTest) && regexTest[0] === password) {
     const hash = bcrypt.hashSync(password, 15);
-    return dataStr([], hash);
+    return dataStrRobj([], hash);
   }
-  return errObj("Invalid password.");
+  return errRobj("Invalid password.");
 };
 
 export default generatePasswordHash;

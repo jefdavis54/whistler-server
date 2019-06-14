@@ -1,4 +1,4 @@
-import { errObj } from "./responseShaperSERVER";
+import { errRobj } from "./responseShaperSERVER";
 import { ERR_03_NO_DELETEDAT_FLAG } from "../lib/errorMessages";
 import { PrismaResponse } from "../lib/typsescriptInterfaces";
 // zJED: My convention is to have this provide a consistent return object to all prisma Query & Mutation requests.
@@ -18,7 +18,7 @@ async function prismaResponseShaper(
   try {
     const prismaResults = await prismaFn(...prismaPar);
     if (Array.isArray(prismaResults.errors)) {
-      return errObj(prismaResults.errors);
+      return errRobj(prismaResults.errors);
     }
     if (!includeDeletedRecords) {
       if (Array.isArray(prismaResults)) {

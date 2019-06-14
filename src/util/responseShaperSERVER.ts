@@ -10,7 +10,7 @@ const validateErrors = (errors: string | string[]): ReturnObject => {
   const returnObj: ReturnObject = {
     errors: [],
     data: undefined,
-    token: undefined
+    token: undefined,
   };
 
   let trimmedString = "";
@@ -24,9 +24,7 @@ const validateErrors = (errors: string | string[]): ReturnObject => {
       returnObj.errors = errors.map(error => error.trim());
     }
   } else {
-    returnObj.errors = [
-      "ERROR:SERVER:validateErrors: Malformed Error Array Received"
-    ];
+    returnObj.errors = ["ERROR:SERVER:validateErrors: Malformed Error Array Received"];
   }
   return returnObj;
 };
@@ -35,14 +33,14 @@ const dataGenericCheck = (
   errors: string | string[],
   data: object | string | [] | undefined,
   token: string | undefined,
-  datatype: object | string | []
+  datatype: object | string | [],
 ): ReturnObject => {
   let valid = true;
   const validatedErrorObj = validateErrors(errors);
   const responseObj: ReturnObject = {
     errors: validatedErrorObj.errors,
     data: undefined,
-    token: undefined
+    token: undefined,
   };
   if (typeof data === typeof datatype) {
     responseObj.data = data;
@@ -53,17 +51,15 @@ const dataGenericCheck = (
     // zJED TODO PROD: Change this to something more generic for production
     responseObj.errors.push(
       `ERROR:SERVER:dataGenericCheck:: Invalid prisma data response received. Expected typeof:${typeof datatype} => Received typeof:${typeof data} for ${JSON.stringify(
-        data
-      )}`
+        data,
+      )}`,
     );
   }
   if (typeof token === "string") {
     responseObj.token = token;
   } else if (typeof token !== "undefined") {
     valid = false;
-    responseObj.errors.push(
-      "ERROR:SERVER:dataGenericCheck:: Invalid token received."
-    );
+    responseObj.errors.push("ERROR:SERVER:dataGenericCheck:: Invalid token received.");
   }
   if (valid) {
     return responseObj;
@@ -71,13 +67,12 @@ const dataGenericCheck = (
   return { errors: responseObj.errors, data: undefined, token: undefined };
 };
 
-const errObj = (errors: string | string[] = []): ReturnObject =>
-  validateErrors(errors);
-const dataObj = (errors: string[], data: any, token = ""): ReturnObject =>
+const errRobj = (errors: string | string[] = []): ReturnObject => validateErrors(errors);
+const dataObjRobj = (errors: string[], data: any, token = ""): ReturnObject =>
   dataGenericCheck(errors, data, token, {});
-const dataArr = (errors: string[], data: [], token = ""): ReturnObject =>
+const dataArrRobj = (errors: string[], data: [], token = ""): ReturnObject =>
   dataGenericCheck(errors, data, token, []);
-const dataStr = (errors: string[], data: string, token = ""): ReturnObject =>
+const dataStrRobj = (errors: string[], data: string, token = ""): ReturnObject =>
   dataGenericCheck(errors, data, token, "");
 
-export { errObj, dataArr, dataObj, dataStr };
+export { errRobj, dataArrRobj, dataObjRobj, dataStrRobj };

@@ -1,6 +1,6 @@
 import { Context, ArtworkLocation } from "../../lib/typsescriptInterfaces";
 import prismaResponse from "../../util/responseShaperPRISMA";
-import { errObj } from "../../util/responseShaperSERVER";
+import { errRobj } from "../../util/responseShaperSERVER";
 import getAuthUserIdWithPermission from "../../util/prismaGetAuthUserIdWithPermission";
 import { PERMISSIONS_OBJ } from "../../lib/constants";
 import { ERR_01_NOT_AUTHORIZED } from "../../lib/errorMessages";
@@ -16,19 +16,19 @@ const createArtworkLocation = async (
 ) => {
   const userId = await getAuthUserIdWithPermission(prisma, request, [PERMISSIONS_OBJ.USER]);
   if (userId.errors.length > 0) {
-    return errObj(ERR_01_NOT_AUTHORIZED);
+    return errRobj(ERR_01_NOT_AUTHORIZED);
   }
   if (dataToChk.easyId) {
     const whereObj = { where: { easyId: dataToChk.easyId.toLowerCase() } };
     const prismaResponseObj = await prismaResponse(prisma.artworkLocations, [whereObj]);
     if (prismaResponseObj.errors.length > 0) {
-      return errObj(prismaResponseObj.errors);
+      return errRobj(prismaResponseObj.errors);
     }
     if (prismaResponseObj.data.length > 0) {
-      return errObj("EasyId taken.");
+      return errRobj("EasyId taken.");
     }
   } else {
-    return errObj("EasyId is missing.");
+    return errRobj("EasyId is missing.");
   }
   // zJED TODO data validation of dataToChk
   const data = { ...dataToChk };

@@ -241,6 +241,10 @@ interface DataLoginUser {
   data: LoginUserInput;
 }
 
+interface DataRequestPasswordReset {
+  email: string;
+}
+
 interface LoginUserInput {
   email: string;
   password: string;
@@ -254,6 +258,16 @@ interface CreateUserInput {
   name: string;
   email: string;
   password: string;
+}
+
+interface DataPasswordReset {
+  data: PasswordResetInput;
+}
+
+interface PasswordResetInput {
+  email: string;
+  password: string;
+  resetToken: string;
 }
 
 export {
@@ -271,4 +285,6 @@ export {
   AuctionArtworkBid,
   DataLoginUser,
   DataCreateUser,
+  DataRequestPasswordReset,
+  DataPasswordReset,
 };

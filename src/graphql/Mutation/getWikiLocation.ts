@@ -1,6 +1,6 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { dataObj, errObj } from "../../util/responseShaperSERVER";
+import { dataObjRobj, errRobj } from "../../util/responseShaperSERVER";
 import { ArtworkLocation } from "../../lib/typsescriptInterfaces";
 
 const initialLocation: ArtworkLocation = {
@@ -43,14 +43,14 @@ const getWikiLocation = async (parent: any, { url }: any) => {
           console.log(index);
           console.log($(element).text());
         });
-        return dataObj([], location);
+        return dataObjRobj([], location);
       }
-      return errObj("URL provided does not have a supported format.");
+      return errRobj("URL provided does not have a supported format.");
     } catch (err) {
       console.log("zJED:BE:getWikiLocation:: axios error", err);
     }
   }
-  return errObj("Invalid URL or site unavailable.");
+  return errRobj("Invalid URL or site unavailable.");
 };
 
 export default getWikiLocation;
