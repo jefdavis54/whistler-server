@@ -66,7 +66,6 @@ const createUser = async (
   // SEC03 WRITE TO PRISMA DATABASE
   const user = await prismaResponse(prisma.createUser, [createUserObj]);
   if (user.errors.length === 0 && user.data) {
-    delete user.data.password;
     const { id } = user.data;
     if (typeof id !== "string") {
       return errRobj("Create user failed.");
@@ -75,6 +74,7 @@ const createUser = async (
     if (tokenRobj.errors.length > 0) {
       return errRobj(tokenRobj.errors);
     }
+    delete user.data.password;
     return dataObjRobj([], user.data, tokenRobj.data);
   }
   return errRobj(user.errors);

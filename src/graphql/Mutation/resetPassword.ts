@@ -47,6 +47,7 @@ const resetPassword = async (parent: any, { data }: DataPasswordReset, { prisma 
     if (tokenRobj.errors.length > 0) {
       return errRobj(tokenRobj.errors);
     }
+    delete updateUserRobj.data.password;
     return dataObjRobj([], updateUserRobj.data, tokenRobj.data);
   }
   return errRobj("Invalid password reset token.");

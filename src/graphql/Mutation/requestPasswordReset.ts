@@ -11,6 +11,8 @@ const requestPasswordReset = async (
   { email }: DataRequestPasswordReset,
   { prisma }: Context,
 ) => {
+  // zJED TODO PROD: Remove console.log
+  console.log("requestPasswordReset", email);
   const where = { email: email.toLowerCase().trim() };
   const userRobj = await prismaResponse(prisma.user, [where]);
   if (userRobj.errors.length > 0) {
